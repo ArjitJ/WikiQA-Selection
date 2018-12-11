@@ -52,7 +52,7 @@ def train_cnn():
     saver = tf.train.Saver()
 
     with tf.Session() as sess:
-        summary_writer = tf.train.SummaryWriter('data/model/summary', sess.graph)
+        summary_writer = tf.summary.FileWriter('data/model/summary', sess.graph)
         sess.run(tf.global_variables_initializer())
         for epoch in range(3):
             train_loss = 0
