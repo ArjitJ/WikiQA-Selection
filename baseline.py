@@ -16,14 +16,14 @@ def word_matching_rank(test_file, output_file):
         a_words = [word for word in sample.answer.split() if word not in puncts and word not in stop_words]
         cooccur_cnt = sum([word in q_words for word in a_words])
         sample.score = cooccur_cnt
-    with open(output_file, 'w') as fout:
+    with open(output_file, 'w', encoding='utf8') as fout:
         for sample, rank in get_final_rank(samples):
             fout.write('{}\t{}\t{}\n'.format(sample.q_id, sample.a_id, rank))
 
 
 def do_nothing(test_file, output_file):
     samples = list(load_qa_data(test_file))
-    with open(output_file, 'w') as fout:
+    with open(output_file, 'w', encoding='utf8') as fout:
         for sample, rank in get_final_rank(samples):
             fout.write('{}\t{}\t{}\n'.format(sample.q_id, sample.a_id, rank))
 
