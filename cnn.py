@@ -42,7 +42,7 @@ class QaCNN(object):
                 pooled = tf.nn.max_pool(h, ksize=[1, q_length-filter_size+1, 1, 1], strides=[1, 1, 1, 1], padding='VALID', name='pool')
                 pooled_q_outputs.append(pooled)
 
-        self.q_h_pool = tf.reshape(tf.concat(3, pooled_q_outputs), [-1, num_filters_total])
+        self.q_h_pool = tf.reshape(tf.concat(pooled_q_outputs, 3), [-1, num_filters_total])
 
         # conv-pool-drop for positive answer
         pos_pooled_outputs = []
@@ -66,21 +66,21 @@ class QaCNN(object):
                                             padding='VALID', name='neg-pool')
                 neg_pooled_outputs.append(neg_pooled)
 
-        self.pos_h_pool = tf.reshape(tf.concat(3, pos_pooled_outputs), [-1, num_filters_total])
+        self.pos_h_pool = tf.reshape(tf.concat(pos_pooled_outputs, 3), [-1, num_filters_total])
 
-        self.neg_h_pool = tf.reshape(tf.concat(3, neg_pooled_outputs), [-1, num_filters_total])
+        self.neg_h_pool = tf.reshape(tf.concat(neg_pooled_outputs, 3), [-1, num_filters_total])
 
         with tf.name_scope('similarity'):
             normalized_q_h_pool = tf.nn.l2_normalize(self.q_h_pool, dim=1)
             normalized_pos_h_pool = tf.nn.l2_normalize(self.pos_h_pool, dim=1)
             normalized_neg_h_pool = tf.nn.l2_normalize(self.neg_h_pool, dim=1)
-            self.pos_similarity = tf.reduce_sum(tf.mul(normalized_q_h_pool, normalized_pos_h_pool), 1)
-            self.neg_similarity = tf.reduce_sum(tf.mul(normalized_q_h_pool, normalized_neg_h_pool), 1)
+            self.pos_similarity = tf.reduce_sum(tf.multiply(normalized_q_h_pool, normalized_pos_h_pool), 1)
+            self.neg_similarity = tf.reduce_sum(tf.multiply(normalized_q_h_pool, normalized_neg_h_pool), 1)
 
         with tf.name_scope('loss'):
             original_loss = tf.reduce_sum(margin - self.pos_similarity + self.neg_similarity)
             self.loss = tf.cond(tf.less(0.0, original_loss), lambda: original_loss, lambda: tf.constant(0.0))
 
-        loss_summary = tf.scalar_summary('loss', self.loss)
-        self.summary_op = tf.merge_all_summaries()
+        loss_summary = tf.summary.scalar('loss', self.loss)
+        self.summary_op = tf.summary.merge_all()
 
