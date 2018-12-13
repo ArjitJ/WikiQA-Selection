@@ -10,7 +10,7 @@ import numpy as np
 
 def lemmatize():
     wn_lemmatizer = nltk.stem.WordNetLemmatizer()
-    data_sets = ['eval1_unlabelled']
+    data_sets = ['traindata','validationdata','eval1_unlabelled']
     for set_name in data_sets:
         fin_path = 'data/raw/{}.tsv'.format(set_name)
         fout_path = 'data/lemmatized/{}.tsv'.format(set_name)
