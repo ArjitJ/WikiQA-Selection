@@ -12,10 +12,10 @@ from data_helper import get_final_rank
 from eval import eval_map_mrr
 
 embedding_file = 'data/embeddings/glove.6B.300d.txt'
-train_file = 'data/lemmatized/WikiQA-train.tsv'
-dev_file = 'data/lemmatized/WikiQA-dev.tsv'
-test_file = 'data/lemmatized/WikiQA-test.tsv'
-train_triplets_file = 'data/lemmatized/WikiQA-train-triplets.tsv'
+train_file = 'data/lemmatized/traindate.tsv'
+dev_file = 'data/lemmatized/validationdata.tsv'
+test_file = 'data/lemmatized/eval1_unlabelled.tsv'
+# train_triplets_file = 'data/lemmatized/WikiQA-train-triplets.tsv'
 
 
 def prepare_helper():

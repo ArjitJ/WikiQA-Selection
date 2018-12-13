@@ -51,4 +51,4 @@ The quality of the rank is evaluated by MRR and MAP, as implemented in `eval.py`
         ```python3 -m tensorflow.tensorboard --logdir data/model/summary/```
     
     
-    
+!Important! Copy the 3 .tsv files to raw before starting with *2.py files
