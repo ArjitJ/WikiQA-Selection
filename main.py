@@ -110,7 +110,7 @@ def gen_rank_for_test(checkpoint_model_path):
                                                                           cnn_model.neg_answer: ans_test,
                                                                           })
         for sample, similarity_score in zip(data_helper.test_samples, similarity_scores):
-            print('{}\t{}\t{}'.format(sample.q_id, sample.a_id, similarity_score))
+            # print('{}\t{}\t{}'.format(sample.q_id, sample.a_id, similarity_score))
             sample.score = similarity_score
         with open('data/output/WikiQA-test.rank', 'w') as fout:
             for sample, rank in get_final_rank(data_helper.test_samples):

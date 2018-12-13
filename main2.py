@@ -12,7 +12,7 @@ from data_helper import get_final_rank
 from eval import eval_map_mrr
 
 embedding_file = 'data/embeddings/glove.6B.300d.txt'
-train_file = 'data/lemmatized/traindate.tsv'
+train_file = 'data/lemmatized/traindatatsv'
 dev_file = 'data/lemmatized/validationdata.tsv'
 test_file = 'data/lemmatized/eval1_unlabelled.tsv'
 # train_triplets_file = 'data/lemmatized/WikiQA-train-triplets.tsv'
@@ -90,7 +90,7 @@ def train_cnn():
 def gen_rank_for_test(checkpoint_model_path):
     data_helper = DataHelper()
     data_helper.restore('data/model/data_helper_info.bin')
-    data_helper.prepare_test_data('data/lemmatized/WikiQA-test.tsv')
+    data_helper.prepare_test_data(test_file)
     cnn_model = QaCNN(
         q_length=data_helper.max_q_length,
         a_length=data_helper.max_a_length,
@@ -105,12 +105,14 @@ def gen_rank_for_test(checkpoint_model_path):
         saver.restore(sess, checkpoint_model_path)
         # test on test set
         q_test, ans_test = zip(*data_helper.test_data)
+
         similarity_scores = sess.run(cnn_model.pos_similarity, feed_dict={cnn_model.question: q_test,
                                                                           cnn_model.pos_answer: ans_test,
                                                                           cnn_model.neg_answer: ans_test,
                                                                           })
+
         for sample, similarity_score in zip(data_helper.test_samples, similarity_scores):
-            print('{}\t{}\t{}'.format(sample.q_id, sample.a_id, similarity_score))
+            # print('{}\t{}\t{}'.format(sample.q_id, sample.a_id, similarity_score))
             sample.score = similarity_score
         with open('data/output/WikiQA-test.rank', 'w') as fout:
             for sample, rank in get_final_rank(data_helper.test_samples):
